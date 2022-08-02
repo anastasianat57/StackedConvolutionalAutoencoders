@@ -1,0 +1,605 @@
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Investigation on the reconstruction of log-mel-spectrograms using stacked convolutional autoencoders</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0 auto;
+      padding: 5%;
+      max-width: 1300px;
+    }
+    audio {
+      width: 250px;
+    }
+    img {
+      width: 80%;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    td img {
+      width: 100%;
+    }
+    table {
+      max-width: 100%;
+      /* vertical-align: middle; */
+      /* padding: 0%; */
+      /* margin: -10px; */
+
+    }
+    h1 {
+      font-size: 35px;
+    }
+    h2 {
+      font-size: 25px;
+      font-weight: normal;
+    }
+    p {
+      font-size: 16px;
+    }
+
+    tr.spaceUnder>td {
+      padding-top: 2em;
+    }
+  </style>
+</head>
+<body>
+
+<div style="max-width: 90%; margin-right: auto; margin-left:auto;">
+  <h1 style="text-align:center; font-size: 40px;">Investigation on the reconstruction of log-mel-spectrograms using stacked convolutional autoencoders</h1>
+</div>
+
+  <!-- <p> LF: Low Frequency </p>
+  <p> MF: Medium Frequency </p>
+  <p> HF: High Frequency </p> -->
+
+
+  <table align="center">
+      <tr>
+        <td align="center">Original Sound</td>
+        <td align="center">Reconstructed from the original mel-spectrogram using Griffin-Lim</td>
+        <td align="center">Reconstructed from the decoded mel-spectrogram using Griffin-Lim</td>
+        <td align="center">Reconstructed from the original mel-spectrogram using the sinusoidal signal reconstruction method</td>
+        <td align="center">Reconstructed from the decoded mel-spectrogram using the sinusoidal signal reconstruction method</td>
+      </tr>
+      <tr class="spaceUnder">
+        <td>Dense</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dense/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      
+      <tr class="spaceUnder">
+        <td>Dropout03Encoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Encoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr class="spaceUnder">
+        <td >Dropout03Decoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03Decoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>Dropout03EncoderDecoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="Dropout03EncoderDecoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>KernelRegularizerL1Encoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Encoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>KernelRegularizerL1Decoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1Decoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <!-- <tr>
+        <td>KernelRegularizerL1EncoderDecoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL1EncoderDecoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr> -->
+
+      <tr class="spaceUnder">
+        <td>KernelRegularizerL2Encoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Encoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>KernelRegularizerL2Decoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2Decoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>KernelRegularizerL2EncoderDecoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="KernelRegularizerL2EncoderDecoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL1Encoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Encoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL1Decoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1Decoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL1EncoderDecoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL1EncoderDecoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL2Encoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Encoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL2Decoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2Decoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>ActivityRegularizerL2EncoderDecoder</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="ActivityRegularizerL2EncoderDecoder/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>AveragePooling</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="AveragePooling/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>NoPooling</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoPooling/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>NoDense</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="NoDense/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>LatentDim4096</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim4096/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+      <tr class="spaceUnder">
+        <td>LatentDim2048</td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/GL0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM0.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/SM0.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/GL1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM1.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/SM1.mp3" type="audio/wav"> </audio></td>
+      </tr>
+      <tr>
+        <td><audio controls> <source src="OriginalDataset/2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/GL2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="OriginalMel/SM2.mp3" type="audio/wav"> </audio></td>
+        <td><audio controls> <source src="LatentDim2048/Sounds/SM2.mp3" type="audio/wav"> </audio></td>
+      </tr>
+
+    </table>
+
+  <script>
+    let players = Array.prototype.slice.call(document.querySelectorAll('audio'));
+    players.forEach(player => {
+        player.addEventListener('play', event => {
+            players.forEach(p => {
+                if (player != p) {p.pause();}
+            });
+        });
+    });
+  </script>
+
+</body>
+</html>
